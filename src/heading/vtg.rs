@@ -29,57 +29,21 @@ impl Vtg {
         }
     }
     
-    pub fn sog_knots(&self) -> F32Error {
+    pub fn sog(&self) -> Result<Speed, NmeaError> {
         if self.base.parameters[5] == "N" {
-            self.base.parameter(4)
+            Ok(Speed::from_knots(self.base.parameter(4)?))
         } else if self.base.parameters[7] == "N" {
-            self.base.parameter(6)
-        } else if self.base.parameters[5] == "K" {
-            Ok(self.base.parameter::<f32>(4)? * KPH_TO_KNOTS)
-        } else if self.base.parameters[7] == "K" {
-            Ok(self.base.parameter::<f32>(6)? * KPH_TO_KNOTS)
-        } else if self.base.parameters[5] == "M" {
-            Ok(self.base.parameter::<f32>(4)? * MPH_TO_KNOTS)
-        } else if self.base.parameters[7] == "M" {
-            Ok(self.base.parameter::<f32>(6)? * MPH_TO_KNOTS)
+            Ok(Speed::from_knots(self.base.parameter(6)?))
         } else {
-            Err(NmeaError("Not found".to_string()))
-        }
-    }
-    
-    pub fn sog_kph(&self) -> F32Error {
-        if self.base.parameters[5] == "K" {
-            self.base.parameter(4)
-        } else if self.base.parameters[7] == "K" {
-            self.base.parameter(6)
-        } else if self.base.parameters[5] == "N" {
-            Ok(self.base.parameter::<f32>(4)? / KPH_TO_KNOTS)
-        } else if self.base.parameters[7] == "N" {
-            Ok(self.base.parameter::<f32>(6)? / KPH_TO_KNOTS)
-        } else if self.base.parameters[5] == "M" {
-            Ok(self.base.parameter::<f32>(4)? / MPH_TO_KNOTS)
-        } else if self.base.parameters[7] == "M" {
-            Ok(self.base.parameter::<f32>(6)? / MPH_TO_KNOTS)
-        } else {
-            Err(NmeaError("Not found".to_string()))
-        }
-    }
-
-    pub fn sog_mph(&self) -> F32Error {
-        if self.base.parameters[5] == "M" {
-            self.base.parameter(4)
-        } else if self.base.parameters[7] == "M" {
-            self.base.parameter(6)
-        } else if self.base.parameters[5] == "K" {
-            Ok(self.base.parameter::<f32>(4)? * KPH_TO_MPH)
-        } else if self.base.parameters[7] == "K" {
-            Ok(self.base.parameter::<f32>(6)? * KPH_TO_MPH)
-        } else if self.base.parameters[5] == "N" {
-            Ok(self.base.parameter::<f32>(4)? / MPH_TO_KNOTS)
-        } else if self.base.parameters[7] == "N" {
-            Ok(self.base.parameter::<f32>(6)? / MPH_TO_KNOTS)
-        } else {
-            Err(NmeaError("Not found".to_string()))
+            match self.base.parameters[5].as_str() {
+                "M" => Ok(Speed::from_mph(self.base.parameter(4)?)),
+                "K" => Ok(Speed::from_kph(self.base.parameter(4)?)),
+                _ => match self.base.parameters[7].as_str() {
+                    "M" => Ok(Speed::from_mph(self.base.parameter(6)?)),
+                    "K" => Ok(Speed::from_kph(self.base.parameter(6)?)),
+                    _ => Err(NmeaError("Not found".to_string())),
+                }
+            }
         }
     }
     

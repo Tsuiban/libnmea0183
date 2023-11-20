@@ -33,24 +33,13 @@ impl Mwv {
         }
     }
 
-    pub fn speed_kph(&self) -> F32Error {
+    pub fn wind_speed(&self) -> Result<Speed, NmeaError> {
         if self.base.parameters[4] == "A" {
-            if self.base.parameters[3] == "K" {
-                self.base.parameter(2)
-            } else {
-                Err(NmeaError("Not found".to_string()))
-            }
-        } else {
-            Err(NmeaError("Invalid data".to_string()))
-        }
-    }
-
-    pub fn speed_mph(&self) -> F32Error {
-        if self.base.parameters[4] == "A" {
-            if self.base.parameters[3] == "M" {
-                self.base.parameter(2)
-            } else {
-                Err(NmeaError("Not found".to_string()))
+            match self.base.parameters[3].as_str() {
+                "M" => Ok(Speed::from_mph(self.base.parameter(2)?)),
+                "N" => Ok(Speed::from_knots(self.base.parameter(2)?)),
+                "K" => Ok(Speed::from_kph(self.base.parameter(2)?)),
+                _ => Err(NmeaError("Not found".to_string()))
             }
         } else {
             Err(NmeaError("Invalid data".to_string()))

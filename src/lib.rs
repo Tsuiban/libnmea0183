@@ -5,7 +5,7 @@ pub mod wind;
 pub mod base;
 
 use gps::{gga::Gga, gll::Gll, rmc::Rmc};
-use miscellaneous::{zda::Zda, rsa::Rsa};
+use miscellaneous::{zda::Zda, rsa::Rsa, mtw::Mtw};
 use heading::{rot::Rot, hdg::Hdg, hdm::Hdm, hdt::Hdt, vtg::Vtg};
 use wind::{mwd::Mwd, mwv::Mwv, vhw::Vhw};
 
@@ -15,6 +15,7 @@ pub enum Nmea0183 {
     HDG(Hdg),
     HDM(Hdm),
     HDT(Hdt),
+    MTW(Mtw),
     MWD(Mwd),
     MWV(Mwv),
     RMC(Rmc),

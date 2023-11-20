@@ -30,48 +30,21 @@ impl Mwd {
         }
     }
 
-    pub fn speed_knots(&self) -> F32Error {
-        if self.base.parameters[5] == "N" {
-            self.base.parameter(4)
-        } else if self.base.parameters[7] == "N" {
-            self.base.parameter(6)
-        } else {
-            Ok(self.base.parameter::<f32>(4)?
-               * match self.base.parameters[5].as_str() {
-                "K" => 0.539957,
-                   "M" => 0.868976,
-                   _ => 0.0,
-               })
-        }
-    }
-
-    pub fn speed_mph(&self) -> F32Error {
-        if self.base.parameters[5] == "M" {
-            self.base.parameter(4)
-        } else if self.base.parameters[7] == "M" {
-            self.base.parameter(6)
-        } else {
-            Ok(self.base.parameter::<f32>(4)?
-               * match self.base.parameters[5].as_str() {
-                "K" => 0.621371,
-                   "N" => 1.15078,
-                   _ => 0.0,
-               })
-        }
-    }
-
-    pub fn speed_kph(&self) -> F32Error {
+    pub fn wind_speed(&self) -> Result<Speed, NmeaError> {
         if self.base.parameters[5] == "K" {
-            self.base.parameter(4)
+            Ok(Speed::from_kph(self.base.parameter(4)?))
         } else if self.base.parameters[7] == "K" {
-            self.base.parameter(6)
+            Ok(Speed::from_kph(self.base.parameter(6)?))
         } else {
-            Ok(self.base.parameter::<f32>(4)?
-               * match self.base.parameters[5].as_str() {
-                "M" => 1.852,
-                   "N" => 1.60934,
-                   _ => 0.0,
-               })
+            match self.base.parameters[5].as_str() {
+                "M" => Ok(Speed::from_mph(self.base.parameter(4)?)),
+                "N" => Ok(Speed::from_knots(self.base.parameter(4)?)),
+                _ => match self.base.parameters[7].as_str() {
+                    "M" => Ok(Speed::from_mph(self.base.parameter(6)?)),
+                    "N" => Ok(Speed::from_knots(self.base.parameter(6)?)),
+                    _ => Err(NmeaError("Not found".to_string()))
+                }
+            }
         }
     }
 }
