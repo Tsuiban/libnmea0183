@@ -19,6 +19,10 @@ pub struct Position {
 
 pub const INSUFFICIENT_NUMBER_OF_PARAMETERS: &str = "Insufficient number of parameters in sentence.";
 
+pub const KPH_TO_KNOTS : f32 = 0.539957;
+pub const MPH_TO_KNOTS : f32 = 0.868976;
+pub const KPH_TO_MPH   : f32 = 1.60934;
+
 #[derive(Debug)]
 pub struct NmeaError(pub String);
 
