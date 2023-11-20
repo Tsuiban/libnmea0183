@@ -25,8 +25,8 @@ impl Rmc {
         self.base.position(2)
     }
 
-    pub fn sog(&self) -> F32Error {
-        self.base.parameter(6)
+    pub fn sog(&self) -> Result<Speed, NmeaError> {
+        Ok(Speed::from_knots(self.base.parameter(6)?))
     }
 
     pub fn track_made_good(&self) -> F32Error {
