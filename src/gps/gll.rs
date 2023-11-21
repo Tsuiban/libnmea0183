@@ -1,14 +1,15 @@
 use crate::base::*;
 
+#[derive(Debug)]
 pub struct Gll {
-    base : Nmea0183Base,
+    base: Nmea0183Base,
 }
 
 impl Gll {
-    pub fn new(base : Nmea0183Base) -> Gll {
+    pub fn new(base: Nmea0183Base) -> Gll {
         Gll { base }
     }
-    
+
     pub fn position(&self) -> PositionError {
         self.base.position(0)
     }
@@ -25,4 +26,3 @@ impl Gll {
         self.base.parameters[6].chars().nth(0)
     }
 }
-

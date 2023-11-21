@@ -1,11 +1,12 @@
 use crate::base::*;
 
+#[derive(Debug)]
 pub struct Mtw {
-    base : Nmea0183Base,
+    base: Nmea0183Base,
 }
 
 impl Mtw {
-    pub fn new(base : Nmea0183Base) -> Mtw {
+    pub fn new(base: Nmea0183Base) -> Mtw {
         Mtw { base }
     }
 

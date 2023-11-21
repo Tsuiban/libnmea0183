@@ -1,15 +1,15 @@
 use crate::base::*;
 
+#[derive(Debug)]
 pub struct Mwd {
-    base : Nmea0183Base,
+    base: Nmea0183Base,
 }
 
-
 impl Mwd {
-    pub fn new(base : Nmea0183Base) -> Mwd {
+    pub fn new(base: Nmea0183Base) -> Mwd {
         Mwd { base }
     }
-    
+
     pub fn direction_true(&self) -> F32Error {
         if self.base.parameters[1] == "T" {
             self.base.parameter(0)
@@ -42,8 +42,8 @@ impl Mwd {
                 _ => match self.base.parameters[7].as_str() {
                     "M" => Ok(Speed::from_mph(self.base.parameter(6)?)),
                     "N" => Ok(Speed::from_knots(self.base.parameter(6)?)),
-                    _ => Err(NmeaError("Not found".to_string()))
-                }
+                    _ => Err(NmeaError("Not found".to_string())),
+                },
             }
         }
     }

@@ -1,11 +1,12 @@
 use crate::base::*;
 
+#[derive(Debug)]
 pub struct Rsa {
-    base : Nmea0183Base,
+    base: Nmea0183Base,
 }
 
 impl Rsa {
-    pub fn new(base : Nmea0183Base) -> Rsa {
+    pub fn new(base: Nmea0183Base) -> Rsa {
         Rsa { base }
     }
 
@@ -16,11 +17,11 @@ impl Rsa {
             Err(NmeaError("Not found".to_string()))
         }
     }
-    
+
     pub fn starboard_rudder(&self) -> F32Error {
         self.angle()
     }
-    
+
     pub fn port_rudder(&self) -> F32Error {
         if self.base.parameters[3] == "A" {
             self.base.parameter(2)

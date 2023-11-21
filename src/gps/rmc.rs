@@ -1,15 +1,16 @@
 use crate::base::*;
 use chrono::prelude::*;
 
+#[derive(Debug)]
 pub struct Rmc {
-    base : Nmea0183Base
+    base: Nmea0183Base,
 }
 
 impl Rmc {
-    pub fn new(base : Nmea0183Base) -> Rmc {
+    pub fn new(base: Nmea0183Base) -> Rmc {
         Rmc { base }
     }
-    
+
     pub fn timestamp(&self) -> Result<DateTime<Utc>, NmeaError> {
         let timeportion: NaiveTime = self.base.naive_time(0)?;
         let dateportion: NaiveDate = self.base.naive_date(8)?;

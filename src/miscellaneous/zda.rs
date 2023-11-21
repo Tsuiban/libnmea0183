@@ -3,20 +3,21 @@ use crate::base::*;
 use chrono::prelude::*;
 use chrono::Duration;
 
+#[derive(Debug)]
 pub struct Zda {
-    base : Nmea0183Base,
+    base: Nmea0183Base,
 }
 
 impl Zda {
-    pub fn new(base : Nmea0183Base) -> Zda {
+    pub fn new(base: Nmea0183Base) -> Zda {
         Zda { base }
     }
-    
+
     pub fn timestamp(&self) -> Result<DateTime<Utc>, NmeaError> {
         let timeportion = self.base.naive_time(0)?;
         let date_string = self.base.parameters[1].clone()
-                          + self.base.parameters[2].clone().as_str()
-                          + self.base.parameters[3].clone().as_str();
+            + self.base.parameters[2].clone().as_str()
+            + self.base.parameters[3].clone().as_str();
         match NaiveDate::parse_from_str(date_string.as_str(), "%d%m%Y") {
             Ok(dateportion) => {
                 let datestamp = NaiveDateTime::new(dateportion, timeportion);

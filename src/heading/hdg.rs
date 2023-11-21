@@ -1,14 +1,15 @@
 use crate::base::*;
 
+#[derive(Debug)]
 pub struct Hdg {
-    base : Nmea0183Base,
+    base: Nmea0183Base,
 }
 
 impl Hdg {
-    pub fn new(base : Nmea0183Base) -> Hdg {
+    pub fn new(base: Nmea0183Base) -> Hdg {
         Hdg { base }
     }
-    
+
     pub fn magnetic_heading(&self) -> F32Error {
         self.base.parameter(0)
     }

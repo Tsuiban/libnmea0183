@@ -1,14 +1,15 @@
 use crate::base::*;
 
+#[derive(Debug)]
 pub struct Gga {
-    base : Nmea0183Base,
+    base: Nmea0183Base,
 }
 
 impl Gga {
     pub fn new(base: Nmea0183Base) -> Gga {
         Gga { base }
     }
-    
+
     pub fn timestamp(&self) -> NaiveTimeError {
         self.base.naive_time(0)
     }

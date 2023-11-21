@@ -1,4 +1,5 @@
 use chrono::prelude::*;
+use latlon_rs::Position;
 use std::{io, str::FromStr};
 
 pub type F32Error = Result<f32, NmeaError>;
@@ -10,12 +11,6 @@ pub type NaiveDateError = Result<NaiveDate, NmeaError>;
 pub type NaiveTimeError = Result<NaiveTime, NmeaError>;
 pub type NaiveDateTimeError = Result<NaiveDateTime, NmeaError>;
 pub type PositionError = Result<Position, NmeaError>;
-
-#[derive(Debug)]
-pub struct Position {
-    pub latitude: f64,
-    pub longitude: f64,
-}
 
 pub const INSUFFICIENT_NUMBER_OF_PARAMETERS: &str =
     "Insufficient number of parameters in sentence.";
@@ -129,19 +124,18 @@ impl Nmea0183Base {
     }
 
     pub fn position(&self, n: usize) -> PositionError {
-        Ok(Position {
-            latitude: if self.parameters[n + 1] == "N" {
-                self.parameter(n)?
+        Ok(Position::from((
+            if self.parameters[n + 1] == "N" {
+                self.parameter::<f64>(n)?
             } else {
-                -self.parameter(n)?
+                -self.parameter::<f64>(n)?
             },
-
-            longitude: if self.parameters[n + 3] == "E" {
-                self.parameter(n + 2)?
+            if self.parameters[n + 3] == "E" {
+                self.parameter::<f64>(n + 2)?
             } else {
-                -self.parameter(n + 2)?
+                -self.parameter::<f64>(n + 2)?
             },
-        })
+        )))
     }
 
     pub fn calculate_checksum(&self) -> u8 {
@@ -189,12 +183,14 @@ pub struct Temperature {
 }
 
 impl Temperature {
-    pub fn from_celsius(celsius : f32) -> Temperature {
+    pub fn from_celsius(celsius: f32) -> Temperature {
         Temperature { celsius }
     }
 
-    pub fn from_fahrenheit(fahrenheit : f32) -> Temperature {
-        Temperature { celsius : (fahrenheit - 32.0) * 5.0 / 9.0 }
+    pub fn from_fahrenheit(fahrenheit: f32) -> Temperature {
+        Temperature {
+            celsius: (fahrenheit - 32.0) * 5.0 / 9.0,
+        }
     }
     pub fn as_celsius(&self) -> f32 {
         self.celsius
@@ -205,28 +201,35 @@ impl Temperature {
     }
 }
 
+#[derive(Debug)]
 pub struct Distance {
     meters: f32,
 }
 
 impl Distance {
-    const METERS_2_MILES : f32 = 0.000621371192;
-    const METERS_2_NM : f32 = 0.000539956803;
+    const METERS_2_MILES: f32 = 0.000621371192;
+    const METERS_2_NM: f32 = 0.000539956803;
 
-    pub fn from_meters(meters : f32) -> Distance {
+    pub fn from_meters(meters: f32) -> Distance {
         Distance { meters }
     }
 
-    pub fn from_kilometers(km : f32) -> Distance {
-        Distance { meters : km * 1000.0 }
+    pub fn from_kilometers(km: f32) -> Distance {
+        Distance {
+            meters: km * 1000.0,
+        }
     }
 
-    pub fn from_miles(miles : f32) -> Distance {
-        Distance { meters : miles / Distance::METERS_2_MILES }
+    pub fn from_miles(miles: f32) -> Distance {
+        Distance {
+            meters: miles / Distance::METERS_2_MILES,
+        }
     }
 
-    pub fn from_nautical_miles(nm : f32) -> Distance {
-        Distance { meters : nm / Distance::METERS_2_NM }
+    pub fn from_nautical_miles(nm: f32) -> Distance {
+        Distance {
+            meters: nm / Distance::METERS_2_NM,
+        }
     }
 
     pub fn as_meters(&self) -> f32 {
@@ -249,16 +252,31 @@ impl Distance {
     }
 }
 
+#[derive(Debug)]
 pub struct Speed {
     meters_per_second: f32,
 }
 
 impl Speed {
-    pub fn from_mps(meters_per_second : f32) -> Speed { Speed { meters_per_second } }
-    pub fn from_kph(kph : f32) -> Speed { Speed { meters_per_second : kph * 1000.0 / 3600.0 } }
-    pub fn from_mph(mph : f32) -> Speed { Speed { meters_per_second : mph / Distance::METERS_2_MILES / 3600.0 } }
-    pub fn from_knots(kts : f32) -> Speed { Speed { meters_per_second : kts / Distance::METERS_2_NM / 3600.0 } }
-    
+    pub fn from_mps(meters_per_second: f32) -> Speed {
+        Speed { meters_per_second }
+    }
+    pub fn from_kph(kph: f32) -> Speed {
+        Speed {
+            meters_per_second: kph * 1000.0 / 3600.0,
+        }
+    }
+    pub fn from_mph(mph: f32) -> Speed {
+        Speed {
+            meters_per_second: mph / Distance::METERS_2_MILES / 3600.0,
+        }
+    }
+    pub fn from_knots(kts: f32) -> Speed {
+        Speed {
+            meters_per_second: kts / Distance::METERS_2_NM / 3600.0,
+        }
+    }
+
     pub fn as_mps(&self) -> f32 {
         self.meters_per_second
     }
