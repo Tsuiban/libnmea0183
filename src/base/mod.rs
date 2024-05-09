@@ -1,5 +1,5 @@
 use chrono::prelude::*;
-use latlon_rs::Position;
+use liblatlon::Position;
 use std::{io, str::FromStr};
 
 pub type F32Error = Result<f32, NmeaError>;
@@ -89,7 +89,7 @@ impl Nmea0183Base {
             sender: String::from(talker),
             message: String::from(message),
             parameters: parts,
-            checksum: checksum.parse::<u8>().unwrap(),
+            checksum: u8::from_str_radix(checksum.as_str(), 16).unwrap(),
         };
         Ok(nmea)
     }
@@ -124,18 +124,34 @@ impl Nmea0183Base {
     }
 
     pub fn position(&self, n: usize) -> PositionError {
-        Ok(Position::from((
-            if self.parameters[n + 1] == "N" {
-                self.parameter::<f64>(n)?
-            } else {
-                -self.parameter::<f64>(n)?
-            },
-            if self.parameters[n + 3] == "E" {
-                self.parameter::<f64>(n + 2)?
-            } else {
-                -self.parameter::<f64>(n + 2)?
-            },
-        )))
+        let latitude = if self.parameters[n + 1] == "N" {
+            self.parameter::<f64>(n)?
+        } else {
+            -self.parameter::<f64>(n)?
+        };
+        let longitude = if self.parameters[n + 3] == "E" {
+            self.parameter::<f64>(n + 2)?
+        } else {
+            -self.parameter::<f64>(n + 2)?
+        };
+        let latitude_degrees = if latitude >= 0.0 {
+            (latitude / 100.0).floor()
+        } else {
+            (latitude / 100.0).ceil()
+        };
+        let longitude_degrees = if longitude >= 0.0 {
+            (longitude / 100.0).floor()
+        } else {
+            (longitude / 100.0).ceil()
+        };
+        let latitude_minutes = (latitude - latitude_degrees * 100.0).abs();
+        let longitude_minutes = (longitude - longitude_degrees * 100.0).abs();
+        Ok(Position::from_degrees_decimal_minutes(
+            latitude_degrees as i8,
+            latitude_minutes,
+            longitude_degrees as i8,
+            longitude_minutes,
+        ))
     }
 
     pub fn calculate_checksum(&self) -> u8 {
@@ -288,5 +304,53 @@ impl Speed {
     }
     pub fn as_knots(&self) -> f32 {
         self.meters_per_second * 3600.0 * 0.000539956803
+    }
+}
+
+pub struct Pressure {
+    bar: f32,
+}
+
+impl Pressure {
+    const INCHES_MERCURY_2_BAR: f32 = 0.03386;
+    const PSI_2_BAR: f32 = 0.0689475729;
+    const KPA_2_BAR: f32 = 0.01;
+
+    pub fn from_bar(bar: f32) -> Pressure {
+        Pressure { bar }
+    }
+
+    pub fn from_inches_mercury(inches: f32) -> Pressure {
+        Pressure {
+            bar: inches * Pressure::INCHES_MERCURY_2_BAR,
+        }
+    }
+
+    pub fn from_psi(psi: f32) -> Pressure {
+        Pressure {
+            bar: psi * Pressure::PSI_2_BAR,
+        }
+    }
+
+    pub fn from_kilo_pascals(kpa: f32) -> Pressure {
+        Pressure {
+            bar: kpa * Pressure::KPA_2_BAR,
+        }
+    }
+
+    pub fn as_bar(&self) -> f32 {
+        self.bar
+    }
+
+    pub fn as_inches_mercury(&self) -> f32 {
+        self.bar / Pressure::INCHES_MERCURY_2_BAR
+    }
+
+    pub fn as_psi(&self) -> f32 {
+        self.bar / Pressure::PSI_2_BAR
+    }
+
+    pub fn as_kpa(&self) -> f32 {
+        self.bar / Pressure::KPA_2_BAR
     }
 }

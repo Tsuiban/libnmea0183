@@ -15,7 +15,7 @@ impl Gga {
     }
 
     pub fn position(&self) -> PositionError {
-        self.base.position(0)
+        self.base.position(1)
     }
 
     pub fn quality(&self) -> U8Error {

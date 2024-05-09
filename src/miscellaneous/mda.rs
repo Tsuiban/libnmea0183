@@ -5,54 +5,6 @@ pub struct Mda {
     base: Nmea0183Base,
 }
 
-pub struct Pressure {
-    bar: f32,
-}
-
-impl Pressure {
-    const INCHES_MERCURY_2_BAR: f32 = 0.03386;
-    const PSI_2_BAR: f32 = 0.0689475729;
-    const KPA_2_BAR: f32 = 0.01;
-
-    pub fn from_bar(bar: f32) -> Pressure {
-        Pressure { bar }
-    }
-
-    pub fn from_inches_mercury(inches: f32) -> Pressure {
-        Pressure {
-            bar: inches * Pressure::INCHES_MERCURY_2_BAR,
-        }
-    }
-
-    pub fn from_psi(psi: f32) -> Pressure {
-        Pressure {
-            bar: psi * Pressure::PSI_2_BAR,
-        }
-    }
-
-    pub fn from_kilo_pascals(kpa: f32) -> Pressure {
-        Pressure {
-            bar: kpa * Pressure::KPA_2_BAR,
-        }
-    }
-
-    pub fn as_bar(&self) -> f32 {
-        self.bar
-    }
-
-    pub fn as_inches_mercury(&self) -> f32 {
-        self.bar / Pressure::INCHES_MERCURY_2_BAR
-    }
-
-    pub fn as_psi(&self) -> f32 {
-        self.bar / Pressure::PSI_2_BAR
-    }
-
-    pub fn as_kpa(&self) -> f32 {
-        self.bar / Pressure::KPA_2_BAR
-    }
-}
-
 impl Mda {
     pub fn new(base: Nmea0183Base) -> Mda {
         Mda { base }
