@@ -7,9 +7,14 @@ pub mod wind;
 
 use ais::vdm::Vdm;
 use base::{Nmea0183Base, NmeaError};
-use gps::{bwc::Bwc, bwr::Bwr, gbs::Gbs, gga::Gga, gll::Gll, grs::Grs, gsa::Gsa, gst::Gst, gsv::Gsv, gxa::Gxa, rmc::Rmc, trf::Trf};
+use gps::{
+    bwc::Bwc, bwr::Bwr, gbs::Gbs, gga::Gga, gll::Gll, grs::Grs, gsa::Gsa, gst::Gst, gsv::Gsv,
+    gxa::Gxa, rmc::Rmc, trf::Trf,
+};
 use heading::{hdg::Hdg, hdm::Hdm, hdt::Hdt, rot::Rot, vtg::Vtg};
-use miscellaneous::{ dbs::Dbs, dbt::Dbt, dpt::Dpt, mda::Mda, mtw::Mtw, rsa::Rsa, vlw::Vlw, xdr::Xdr, zda::Zda, };
+use miscellaneous::{
+    dbs::Dbs, dbt::Dbt, dpt::Dpt, mda::Mda, mtw::Mtw, rsa::Rsa, vlw::Vlw, xdr::Xdr, zda::Zda,
+};
 use wind::{mwd::Mwd, mwv::Mwv, vhw::Vhw, vwr::Vwr, vwt::Vwt};
 
 #[derive(Debug)]
@@ -90,10 +95,10 @@ pub fn classify(b: Nmea0183Base) -> Nmea0183 {
     }
 }
 
-pub fn sender(_nmea0183 : &Nmea0183) -> Result<String, String> {
+pub fn sender(_nmea0183: &Nmea0183) -> Result<String, String> {
     Err(String::from("Not yet implemented"))
 }
 
-pub fn message(_nmea0183 : &Nmea0183) -> Result<String, String> {
+pub fn message(_nmea0183: &Nmea0183) -> Result<String, String> {
     Err(String::from("Not yet implemented"))
 }

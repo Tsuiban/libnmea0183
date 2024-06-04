@@ -6,6 +6,10 @@ pub struct Trf {
 }
 
 impl Trf {
-    pub fn new(base : Nmea0183Base) -> Trf { Trf { base } }
-    pub fn timestamp(&self) -> NaiveTimeError { self.base.naive_time(0) }
+    pub fn new(base: Nmea0183Base) -> Trf {
+        Trf { base }
+    }
+    pub fn timestamp(&self) -> NaiveTimeError {
+        self.base.naive_time(0)
+    }
 }

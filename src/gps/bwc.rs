@@ -6,6 +6,10 @@ pub struct Bwc {
 }
 
 impl Bwc {
-    pub fn new(base : Nmea0183Base) -> Bwc { Bwc { base } }
-    pub fn timestamp(&self) -> NaiveTimeError { self.base.naive_time(0) }
+    pub fn new(base: Nmea0183Base) -> Bwc {
+        Bwc { base }
+    }
+    pub fn timestamp(&self) -> NaiveTimeError {
+        self.base.naive_time(0)
+    }
 }

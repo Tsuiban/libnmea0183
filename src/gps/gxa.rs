@@ -6,6 +6,10 @@ pub struct Gxa {
 }
 
 impl Gxa {
-    pub fn new(base : Nmea0183Base) -> Gxa { Gxa { base } }
-    pub fn timestamp(&self) -> NaiveTimeError { self.base.naive_time(0) }
+    pub fn new(base: Nmea0183Base) -> Gxa {
+        Gxa { base }
+    }
+    pub fn timestamp(&self) -> NaiveTimeError {
+        self.base.naive_time(0)
+    }
 }

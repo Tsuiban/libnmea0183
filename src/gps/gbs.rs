@@ -6,6 +6,10 @@ pub struct Gbs {
 }
 
 impl Gbs {
-    pub fn new(base : Nmea0183Base) -> Gbs { Gbs { base } }
-    pub fn timestamp(&self) -> NaiveTimeError { self.base.naive_time(0) }
+    pub fn new(base: Nmea0183Base) -> Gbs {
+        Gbs { base }
+    }
+    pub fn timestamp(&self) -> NaiveTimeError {
+        self.base.naive_time(0)
+    }
 }
