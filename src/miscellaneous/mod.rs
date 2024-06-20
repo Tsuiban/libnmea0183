@@ -7,3 +7,5 @@ pub mod rsa;
 pub mod vlw;
 pub mod xdr;
 pub mod zda;
+pub mod zfo;
+pub mod ztg;

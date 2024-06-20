@@ -7,9 +7,8 @@ pub type F64Error = Result<f64, NmeaError>;
 pub type U8Error = Result<u8, NmeaError>;
 pub type UsizeError = Result<usize, NmeaError>;
 
-pub type NaiveDateError = Result<NaiveDate, NmeaError>;
-pub type NaiveTimeError = Result<NaiveTime, NmeaError>;
-pub type NaiveDateTimeError = Result<NaiveDateTime, NmeaError>;
+pub type DateTimeError = Result<DateTime<Utc>, NmeaError>;
+
 pub type PositionError = Result<Position, NmeaError>;
 
 pub const INSUFFICIENT_NUMBER_OF_PARAMETERS: &str =
@@ -109,17 +108,25 @@ impl Nmea0183Base {
         }
     }
 
-    pub fn naive_time(&self, n: usize) -> NaiveTimeError {
+    pub fn from_time(&self, n: usize) -> DateTimeError {
         match NaiveTime::parse_from_str(self.parameters[n].as_str(), "%H%M%S%.f") {
             Err(e) => return Err(NmeaError(e.to_string())),
-            Ok(t) => Ok(t),
+	      Ok(t) => {
+              let naive_date = Utc::now().date_naive();
+              let naive_date_time = NaiveDateTime::new(naive_date, t);
+              Ok(DateTime::from_naive_utc_and_offset(naive_date_time, Utc))
+          }
         }
     }
 
-    pub fn naive_date(&self, n: usize) -> NaiveDateError {
+    pub fn from_date(&self, n: usize) -> DateTimeError {
         match NaiveDate::parse_from_str(self.parameters[n].as_str(), "%d%m%y") {
             Err(e) => return Err(NmeaError(e.to_string())),
-            Ok(t) => Ok(t),
+            Ok(t) => {
+                let naive_time = Utc::now().time();
+                let naive_date_time = NaiveDateTime::new(t, naive_time);
+                Ok(DateTime::from_naive_utc_and_offset(naive_date_time, Utc))
+            },
         }
     }
 
@@ -299,12 +306,8 @@ impl Speed {
     pub fn as_kph(&self) -> f32 {
         self.meters_per_second * 3.6
     }
-    pub fn as_mph(&self) -> f32 {
-        self.meters_per_second * 3600.0 * 0.000621371192
-    }
-    pub fn as_knots(&self) -> f32 {
-        self.meters_per_second * 3600.0 * 0.000539956803
-    }
+    pub fn as_mph(&self) -> f32 { self.as_kph() * KPH_TO_MPH  }
+    pub fn as_knots(&self) -> f32 { self.as_kph() * KPH_TO_KNOTS }
 }
 
 pub struct Pressure {

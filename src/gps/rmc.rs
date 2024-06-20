@@ -11,11 +11,11 @@ impl Rmc {
         Rmc { base }
     }
 
-    pub fn timestamp(&self) -> Result<DateTime<Utc>, NmeaError> {
-        let timeportion: NaiveTime = self.base.naive_time(0)?;
-        let dateportion: NaiveDate = self.base.naive_date(8)?;
-        let naivedatetime = NaiveDateTime::new(dateportion, timeportion);
-        Ok(DateTime::from_naive_utc_and_offset(naivedatetime, Utc))
+    pub fn timestamp(&self) -> DateTimeError {
+        let timeportion: NaiveTime = self.base.from_time(0)?.time();
+        let dateportion: NaiveDate = self.base.from_date(8)?.date_naive();
+        let naivetime = NaiveDateTime::new(dateportion, timeportion);
+        Ok(DateTime::from_naive_utc_and_offset(naivetime, Utc))
     }
 
     pub fn is_valid(&self) -> bool {

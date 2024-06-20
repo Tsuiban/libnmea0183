@@ -14,6 +14,7 @@ use gps::{
 use heading::{hdg::Hdg, hdm::Hdm, hdt::Hdt, rot::Rot, vtg::Vtg};
 use miscellaneous::{
     dbs::Dbs, dbt::Dbt, dpt::Dpt, mda::Mda, mtw::Mtw, rsa::Rsa, vlw::Vlw, xdr::Xdr, zda::Zda,
+    zfo::Zfo, ztg::Ztg,
 };
 use wind::{mwd::Mwd, mwv::Mwv, vhw::Vhw, vwr::Vwr, vwt::Vwt};
 
@@ -51,6 +52,8 @@ pub enum Nmea0183 {
     VWT(Vwt),
     XDR(Xdr),
     ZDA(Zda),
+    ZFO(Zfo),
+    ZTG(Ztg),
 
     Unknown(Nmea0183Base),
 }

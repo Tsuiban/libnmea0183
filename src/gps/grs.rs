@@ -9,7 +9,7 @@ impl Grs {
     pub fn new(base: Nmea0183Base) -> Grs {
         Grs { base }
     }
-    pub fn timestamp(&self) -> NaiveTimeError {
-        self.base.naive_time(0)
+    pub fn timestamp(&self) -> DateTimeError {
+        self.base.from_time(0)
     }
 }
