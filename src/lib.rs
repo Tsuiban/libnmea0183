@@ -16,7 +16,7 @@ use miscellaneous::{
     dbs::Dbs, dbt::Dbt, dpt::Dpt, mda::Mda, mtw::Mtw, rsa::Rsa, vlw::Vlw, xdr::Xdr, zda::Zda,
     zfo::Zfo, ztg::Ztg,
 };
-use wind::{mwd::Mwd, mwv::Mwv, vhw::Vhw, vwr::Vwr, vwt::Vwt};
+use wind::{mwd::Mwd, mwv::Mwv, vhw::Vhw, vwr::Vwr, vwt::Vwt, vbw::Vbw};
 
 #[derive(Debug)]
 pub enum Nmea0183 {
@@ -44,6 +44,7 @@ pub enum Nmea0183 {
     ROT(Rot),
     RSA(Rsa),
     TRF(Trf),
+    VBW(Vbw),
     VDM(Vdm),
     VHW(Vhw),
     VLW(Vlw),
