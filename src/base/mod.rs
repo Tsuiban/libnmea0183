@@ -108,7 +108,7 @@ impl Nmea0183Base {
         }
     }
 
-    pub fn from_time(&self, n: usize) -> DateTimeError {
+    pub fn by_time(&self, n: usize) -> DateTimeError {
         match NaiveTime::parse_from_str(self.parameters[n].as_str(), "%H%M%S%.f") {
             Err(e) => return Err(NmeaError(e.to_string())),
 	      Ok(t) => {
@@ -119,7 +119,7 @@ impl Nmea0183Base {
         }
     }
 
-    pub fn from_date(&self, n: usize) -> DateTimeError {
+    pub fn by_date(&self, n: usize) -> DateTimeError {
         match NaiveDate::parse_from_str(self.parameters[n].as_str(), "%d%m%y") {
             Err(e) => return Err(NmeaError(e.to_string())),
             Ok(t) => {

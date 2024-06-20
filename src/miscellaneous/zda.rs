@@ -14,7 +14,7 @@ impl Zda {
     }
 
     pub fn timestamp(&self) -> DateTimeError {
-        let timeportion = self.base.from_time(0)?.time();
+        let timeportion = self.base.by_time(0)?.time();
         let date_string = self.base.parameters[1].clone()
             + self.base.parameters[2].clone().as_str()
             + self.base.parameters[3].clone().as_str();

@@ -15,7 +15,7 @@ impl Gll {
     }
 
     pub fn timestamp(&self) -> DateTimeError {
-        self.base.from_time(4)
+        self.base.by_time(4)
     }
 
     pub fn is_valid(&self) -> bool {

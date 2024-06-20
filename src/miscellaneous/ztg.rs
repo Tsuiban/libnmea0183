@@ -12,11 +12,11 @@ impl Ztg {
     pub fn new(base : Nmea0183Base) -> Ztg { Ztg { base } }
 
     pub fn timestamp(&self) -> DateTimeError {
-        self.base.from_time(0)
+        self.base.by_time(0)
     }
 
     pub fn time_remaining(&self) -> Result<Duration, NmeaError> {
-        if let Ok(t) = self.base.from_time(1) {
+        if let Ok(t) = self.base.by_time(1) {
             let o = DateTime::from_naive_utc_and_offset(
                 NaiveDateTime::new(
                     t.date_naive(),

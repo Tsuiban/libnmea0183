@@ -12,8 +12,8 @@ impl Rmc {
     }
 
     pub fn timestamp(&self) -> DateTimeError {
-        let timeportion: NaiveTime = self.base.from_time(0)?.time();
-        let dateportion: NaiveDate = self.base.from_date(8)?.date_naive();
+        let timeportion: NaiveTime = self.base.by_time(0)?.time();
+        let dateportion: NaiveDate = self.base.by_date(8)?.date_naive();
         let naivetime = NaiveDateTime::new(dateportion, timeportion);
         Ok(DateTime::from_naive_utc_and_offset(naivetime, Utc))
     }

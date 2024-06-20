@@ -10,6 +10,6 @@ impl Bwr {
         Bwr { base }
     }
     pub fn timestamp(&self) -> DateTimeError {
-        self.base.from_time(0)
+        self.base.by_time(0)
     }
 }
