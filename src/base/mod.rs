@@ -111,11 +111,11 @@ impl Nmea0183Base {
     pub fn by_time(&self, n: usize) -> DateTimeError {
         match NaiveTime::parse_from_str(self.parameters[n].as_str(), "%H%M%S%.f") {
             Err(e) => return Err(NmeaError(e.to_string())),
-	      Ok(t) => {
-              let naive_date = Utc::now().date_naive();
-              let naive_date_time = NaiveDateTime::new(naive_date, t);
-              Ok(DateTime::from_naive_utc_and_offset(naive_date_time, Utc))
-          }
+            Ok(t) => {
+                let naive_date = Utc::now().date_naive();
+                let naive_date_time = NaiveDateTime::new(naive_date, t);
+                Ok(DateTime::from_naive_utc_and_offset(naive_date_time, Utc))
+            }
         }
     }
 
@@ -126,7 +126,7 @@ impl Nmea0183Base {
                 let naive_time = Utc::now().time();
                 let naive_date_time = NaiveDateTime::new(t, naive_time);
                 Ok(DateTime::from_naive_utc_and_offset(naive_date_time, Utc))
-            },
+            }
         }
     }
 
@@ -306,8 +306,12 @@ impl Speed {
     pub fn as_kph(&self) -> f32 {
         self.meters_per_second * 3.6
     }
-    pub fn as_mph(&self) -> f32 { self.as_kph() * KPH_TO_MPH  }
-    pub fn as_knots(&self) -> f32 { self.as_kph() * KPH_TO_KNOTS }
+    pub fn as_mph(&self) -> f32 {
+        self.as_kph() * KPH_TO_MPH
+    }
+    pub fn as_knots(&self) -> f32 {
+        self.as_kph() * KPH_TO_KNOTS
+    }
 }
 
 pub struct Pressure {
