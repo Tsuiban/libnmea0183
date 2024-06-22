@@ -10,19 +10,19 @@ impl Vbw {
         Vbw { base }
     }
 
-    pub fn water_speed(&self) -> F32Error {
+    pub fn water_speed(&self) -> Result<Speed, NmeaError> {
         if self.base.parameters[2] == "A" {
-            self.base.parameter(0)
+            Ok(Speed::from_knots(self.base.parameter(0)?))
         } else {
-            Ok(0.)
+            Err(NmeaError("Invalid speed".to_string()))
         }
     }
 
-    pub fn transverse_water_speed(&self) -> F32Error {
+    pub fn transverse_water_speed(&self) -> Result<Speed, NmeaError> {
         if self.base.parameters[2] == "A" {
-            self.base.parameter(1)
+            Ok(Speed::from_knots(self.base.parameter(1)?))
         } else {
-            Ok(0.)
+            Err(NmeaError("Invalid speed.".to_string()))
         }
     }
 
